@@ -1,0 +1,9 @@
+---
+name: s3fs-mounter
+
+templates: {}
+
+packages:
+- s3fs
+
+properties: {}

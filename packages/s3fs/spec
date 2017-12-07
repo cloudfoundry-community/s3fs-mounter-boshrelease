@@ -1,0 +1,11 @@
+---
+name: s3fs
+
+dependencies: []
+
+files:
+  - s3fs-fuse/**/*
+  - s3fs-deps/autoconf-2.69.tar.gz
+  - s3fs-deps/automake-1.15.tar.gz
+  - s3fs-deps/pkg-config-0.29.tar.gz
+  - s3fs-deps/fuse-2.9.7.tar.gz

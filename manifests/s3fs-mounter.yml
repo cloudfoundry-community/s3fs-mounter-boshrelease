@@ -1,0 +1,30 @@
+name: s3fs-mounter
+
+instance_groups:
+- name: s3fs-mounter
+  instances: 1
+  azs: [z1]
+  vm_type: default
+  stemcell: default
+  networks: [{name: default}]
+  update: {serial: true}
+  jobs:
+  - name: s3fs-mounter
+    release: s3fs-mounter
+    properties: {}
+
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: latest
+
+update:
+  canaries: 0
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000
+  max_in_flight: 32
+  serial: false
+
+releases:
+- name: s3fs-mounter
+  version: latest
