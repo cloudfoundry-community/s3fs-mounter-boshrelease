@@ -1,0 +1,1 @@
+* * * * * root /var/vcap/jobs/s3fs-mounter/bin/s3fs_mounter_ctl mount

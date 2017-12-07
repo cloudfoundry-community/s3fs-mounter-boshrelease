@@ -28,7 +28,6 @@ pushd fuse-2.9.7
   ./configure --prefix=$BOSH_INSTALL_TARGET
   make install prefix=$BOSH_INSTALL_TARGET
 popd
-# cp -R fuse-2.9.7 ${BOSH_INSTALL_TARGET}
 
 export PKG_CONFIG_PATH=/var/vcap/packages/s3fs/lib/pkgconfig 
 

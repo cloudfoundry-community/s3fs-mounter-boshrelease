@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+PATH=/var/vcap/packages/s3fs/bin:${PATH}
+
+export JOB_DIR=/var/vcap/jobs/s3fs-mounter
+export LOG_DIR=/var/vcap/sys/log/s3fs-mounter
+export CONFIG_DIR="${JOB_DIR}/config"
+export S3FS_MOUNT=<%= p('mount_point') %>
+export S3FS_CACHE=/var/vcap/data/tmp/s3fs
+
+source ${JOB_DIR}/utils/syslog_utils.sh
+source ${JOB_DIR}/utils/handle_s3fs_blobstore.sh
+
+tee_output_to_sys_log_and_file "${LOG_DIR}" "$(basename "$0")"
+
+function mounter_running() {
+  [[ $(pgrep -c -f s3fs_mounter_ctl) -gt 16 ]]
+}
+
+case $1 in
+
+  install)
+    cp ${JOB_DIR}/bin/s3fs_mounter_crontab /etc/cron.d/
+    chmod 0644 /etc/cron.d/s3fs_mounter_crontab
+    mount_s3fs
+    ;;
+
+  mount)
+    if mounter_running; then
+      exit 0
+    fi
+
+    mount_s3fs
+    ;;
+
+  unmount)
+    rm /etc/cron.d/s3fs_mounter_crontab
+    unmount_s3fs
+    ;;
+
+  *)
+    echo "Usage: s3fs_mounter_ctl {install|mount|unmount}"
+    ;;
+
+esac

@@ -1,0 +1,8 @@
+<% if_p("bucket") do %>
+
+check file s3fs_mounter path /etc/cron.d/s3fs_mounter_crontab
+  start program "/var/vcap/jobs/s3fs-mounter/bin/s3fs_mounter_ctl install"
+  stop program "/var/vcap/jobs/s3fs-mounter/bin/s3fs_mounter_ctl unmount"
+  group vcap
+
+<% end %>

@@ -2,3 +2,4 @@ blobs
 /.dev_builds/
 /dev_releases/
 /config/private.yml
+*~

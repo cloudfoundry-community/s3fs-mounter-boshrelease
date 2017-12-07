@@ -1,0 +1,63 @@
+function s3fs_mounted() {
+  mount | grep -q "on ${S3FS_MOUNT} type fuse.s3fs"
+}
+
+mount_s3fs() {
+  if s3fs_mounted; then
+    exit 0
+  fi
+
+  mkdir -p "${S3FS_MOUNT}"
+  mkdir -p "${S3FS_CACHE}"
+
+  unmount_s3fs
+
+  echo "Mounting S3FS..."
+
+  chmod 600 ${CONFIG_DIR}/passwd
+  s3fs \
+    -o url='<%= p("url") %>' \
+    -o endpoint='<%= p("region") %>' \
+    -o use_cache=${S3FS_CACHE} \
+    <% if_p("skip_ssl_validation") do -%>
+    -o no_check_certificate \
+    <% end -%>
+    <% if_p("enable_signature_version_2") do -%>
+    -o sigv2 \
+    <% end -%>
+    <% if_p("enable_content_md5") do -%>
+    -o enable_content_md5 \
+    <% end -%>
+    <% if_p("use_path_request_style") do -%>
+    -o use_path_request_style \
+    <% end -%>
+    <% if_p("allow_other") do -%>
+    -o allow_other \
+    <% end -%>
+    -o passwd_file=${CONFIG_DIR}/passwd \
+    <%= p('bucket') -%> ${S3FS_MOUNT}
+
+  if [ $? != 0 ]; then
+    echo "Cannot mount S3FS, exiting..."
+    exit 1
+  fi
+
+  chpst -u vcap:vcap touch "${S3FS_MOUNT}/.s3fs_test"
+  if [ $? != 0 ]; then
+    echo "Failed to start: cannot write to S3FS"
+    exit 1
+  fi
+  echo "S3FS mounted"
+}
+
+unmount_s3fs() {
+  if grep -qs "${S3FS_MOUNT}" /proc/mounts; then
+    echo "Found S3FS mount, unmounting..."
+    umount "${S3FS_MOUNT}"
+    if [ $? -ne 0 ]; then
+      echo "Failed to unmount S3FS, exiting..."
+      exit 1
+    fi
+  fi
+  echo "S3FS unmounted"
+}

@@ -1,0 +1,15 @@
+- type: replace
+  path: /instance_groups/name=s3fs-mounter/jobs/name=s3fs-mounter/properties/url?
+  value: ((url))
+
+- type: replace
+  path: /instance_groups/name=s3fs-mounter/jobs/name=s3fs-mounter/properties/skip_ssl_validation?
+  value: ((skip_ssl_validation))
+
+- type: replace
+  path: /instance_groups/name=s3fs-mounter/jobs/name=s3fs-mounter/properties/enable_signature_version_2?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=s3fs-mounter/jobs/name=s3fs-mounter/properties/use_path_request_style?
+  value: true
