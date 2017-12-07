@@ -1,1 +1,5 @@
 name: s3fs-mounter
+blobstore:
+  provider: s3
+  options:
+    bucket_name: s3fs-mounter-boshrelease
