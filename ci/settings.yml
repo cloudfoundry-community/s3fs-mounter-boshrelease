@@ -1,0 +1,34 @@
+meta:
+  name: s3fs-mounter
+  target:  ohio-cf
+  url:     https://ci-ohio.starkandwayne.com
+
+  aws:
+    bucket: (( concat meta.name "-boshrelease" ))
+    access_key: ((aws-cfcommunity-access))
+    secret_key: ((aws-cfcommunity-secret))
+
+  bosh-lite:
+    target:   ((bosh-lite-environment))
+    cacert:   ((bosh-lite-ca-cert))
+    username: ((bosh-lite-client))
+    password: ((bosh-lite-client-secret))
+
+  git:
+    email:  ((git-commit-email))
+    name:   ((git-commit-name))
+
+  github:
+    owner:  cloudfoundry-community
+    repo:   (( concat meta.name "-boshrelease" ))
+    branch: master
+    private_key:  ((github-private-key))
+    access_token: ((github-access-token))
+
+  slack:
+    webhook:  ((slack-webhook))
+    icon:     ((slack-logo))
+    username: ((slack-username))
+    channel:       '#docker-boshrelease'
+    blob_success:  '(( concat "$BUILD_PIPELINE_NAME: New version of $BUILD_JOB_NAME was detected, and updated in master. <" meta.url "/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME| Cut a new release?>" ))'
+    blob_failure:  '(( concat "$BUILD_PIPELINE_NAME: :airplane_arriving: <" meta.url "/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME| Failed to update the blob for $BUILD_JOB_NAME>" ))'
